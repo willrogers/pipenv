@@ -43,7 +43,7 @@ __all__ = [
 if sys.version_info >= (3, 5):
     from pathlib import Path
 else:
-    from pipenv.vendor.pathlib2 import Path
+    from pathlib2 import Path
 
 if six.PY3:
     # Only Python 3.4+ is supported
@@ -53,12 +53,12 @@ if six.PY3:
     from weakref import finalize
 else:
     # Only Python 2.7 is supported
-    from pipenv.vendor.backports.functools_lru_cache import lru_cache
+    from backports.functools_lru_cache import lru_cache
     from .backports.functools import partialmethod  # type: ignore
-    from pipenv.vendor.backports.shutil_get_terminal_size import get_terminal_size
+    from backports.shutil_get_terminal_size import get_terminal_size
 
     NamedTemporaryFile = _NamedTemporaryFile
-    from pipenv.vendor.backports.weakref import finalize  # type: ignore
+    from backports.weakref import finalize  # type: ignore
 
 try:
     # Introduced Python 3.5
