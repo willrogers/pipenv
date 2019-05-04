@@ -39,6 +39,7 @@ from ..utils import (
     parse_asdf_version_order,
     parse_pyenv_version_order,
     path_is_known_executable,
+    split_version_and_name,
     unnest,
 )
 
@@ -578,25 +579,7 @@ class SystemPath(object):
         :rtype: :class:`~pythonfinder.models.PathEntry`
         """
 
-        if isinstance(major, six.string_types) and not minor and not patch:
-            # Only proceed if this is in the format "x.y.z" or similar
-            if major.isdigit() or (major.count(".") > 0 and major[0].isdigit()):
-                version = major.split(".", 2)
-                if isinstance(version, (tuple, list)):
-                    if len(version) > 3:
-                        major, minor, patch, rest = version
-                    elif len(version) == 3:
-                        major, minor, patch = version
-                    elif len(version) == 2:
-                        major, minor = version
-                    else:
-                        major = major[0]
-                else:
-                    major = major
-                    name = None
-            else:
-                name = "{0!s}".format(major)
-                major = None
+        major, minor, patch, name = split_version_and_name(major, minor, patch, name)
         sub_finder = operator.methodcaller(
             "find_python_version", major, minor, patch, pre, dev, arch, name
         )
