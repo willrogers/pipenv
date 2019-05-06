@@ -1,12 +1,10 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8c641b76e29b8bfedd276146b52303ddc84192c71ff9a655839dcf17f559332e"
+            "sha256": "f4d89c0aab5c4e865f8c96ba24613fb1e66bae803a3ceaeadb6abf0061898091"
         },
         "pipfile-spec": 6,
-        "requires": {
-            "python_version": "2.7"
-        },
+        "requires": {},
         "sources": [
             {
                 "name": "pypi",
@@ -372,11 +370,11 @@
         },
         "mock": {
             "hashes": [
-                "sha256:5eda46efb363128828d6fd2bf8d16f6ebb66f5b543b9f7f8f4eb224c5cb503fe",
-                "sha256:d659f8ef8810ff4c3f8f973d113a05d291a08ab0f7ed17bd60887983b93a0f9a"
+                "sha256:21a2c07af3bbc4a77f9d14ac18fcc1782e8e7ea363df718740cdeaf61995b5e7",
+                "sha256:7868db2825a1563578869d4a011a036503a2f1d60f9ff9dd1e3205cd6e25fcec"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==3.0.3"
+            "version": "==3.0.4"
         },
         "more-itertools": {
             "hashes": [
