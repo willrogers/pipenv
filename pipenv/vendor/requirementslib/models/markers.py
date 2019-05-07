@@ -139,12 +139,16 @@ def _format_pyspec(specifier):
         if not any(op in specifier for op in Specifier._operators.keys()):
             specifier = "=={0}".format(specifier)
         specifier = Specifier(specifier)
-    version = specifier.version.replace(".*", "")
-    if ".*" in specifier.version:
+    version = getattr(specifier, "version", specifier)
+    if version.endswith("*") and not version.endswith(".*"):
+        version = "{0}.*".format(version.rstrip("*"))
+    if ".*" in version:
+        version = version.replace(".*", "")
         specifier = Specifier("{0}{1}".format(specifier.operator, version))
     try:
         op = REPLACE_RANGES[specifier.operator]
     except KeyError:
+        print(specifier)
         return specifier
     curr_tuple = _tuplize_version(version)
     try:
@@ -156,8 +160,10 @@ def _format_pyspec(specifier):
             op = "<="
             next_tuple = (next_tuple[0], curr_tuple[1])
         else:
+            # print(specifier)
             return specifier
     specifier = Specifier("{0}{1}".format(op, _format_version(next_tuple)))
+    # print(specifier)
     return specifier
 
 
@@ -174,16 +180,20 @@ def _get_specs(specset):
     if isinstance(specset, str):
         specset = SpecifierSet(specset)
     result = []
-    for spec in set(specset):
-        version = spec.version
-        op = spec.operator
-        if op in ("in", "not in"):
-            versions = version.split(",")
-            op = "==" if op == "in" else "!="
-            for ver in versions:
-                result.append((op, _tuplize_version(ver.strip())))
-        else:
-            result.append((spec.operator, _tuplize_version(spec.version)))
+    try:
+        for spec in set(specset):
+            version = spec.version
+            op = spec.operator
+            if op in ("in", "not in"):
+                versions = version.split(",")
+                op = "==" if op == "in" else "!="
+                for ver in versions:
+                    result.append((op, _tuplize_version(ver.strip())))
+            else:
+                result.append((spec.operator, _tuplize_version(spec.version)))
+    except Exception:
+        print(specset)
+        raise
     return sorted(result, key=operator.itemgetter(1))
 
 
@@ -198,7 +208,10 @@ def _group_by_op(specs):
 
 @lru_cache(maxsize=128)
 def cleanup_pyspecs(specs, joiner="or"):
-    specs = {_format_pyspec(spec) for spec in specs}
+    if isinstance(specs, six.string_types):
+        specs = set([_format_pyspec(specs)])
+    else:
+        specs = {_format_pyspec(spec) for spec in specs}
     # for != operator we want to group by version
     # if all are consecutive, join as a list
     results = set()
